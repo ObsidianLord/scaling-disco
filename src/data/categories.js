@@ -1,4 +1,4 @@
-export default Categories = {
+export default {
   MUSIC: {
     name: 'Музыка',
   },

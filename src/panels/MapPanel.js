@@ -21,7 +21,13 @@ import {
   DEFAULT_MAP_ZOOM_CONTROL as zoomControl,
   DEFAULT_TILE_URL,
   DEFAULT_MAP_STYLE_LIGHT as filter,
+  DEFAULT_EMOTION_ICON_SIZE as iconSize,
+  DEFAULT_EMOTION_ICON_ANCHOR as iconAnchor,
+  DEFAULT_EMOTION_ICON_BG_SIZE as shadowSize,
+  DEFAULT_EMOTION_ICON_BG_ANCHOR as shadowAnchor,
 } from '../consts/map';
+
+import Posts from '../data/posts';
 
 class MapPanel extends React.Component {
   constructor(props) {
@@ -52,6 +58,19 @@ class MapPanel extends React.Component {
       DEFAULT_TILE_URL,
       { filter }
     ).addTo(map);
+
+    Posts.forEach((post) => {
+      L.marker(post.latlng, {
+        icon: L.icon({
+          iconUrl: post.emotion.photo_url,
+          shadowUrl: post.emotion.bg_url,
+          iconSize,
+          iconAnchor,
+          shadowSize,
+          shadowAnchor
+      })
+      }).addTo(map);
+    })
 
     this.setState({
       map
