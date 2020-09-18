@@ -9,7 +9,10 @@ import {
 } from '@vkontakte/vkui';
 import L from 'leaflet';
 import 'leaflet.tilelayer.colorfilter/src/leaflet-tilelayer-colorfilter.min.js';
+import 'leaflet.markercluster/dist/leaflet.markercluster';
 
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet/dist/leaflet.css';
 import '../css/MapPanel.css';
 
@@ -70,8 +73,8 @@ class MapPanel extends React.Component {
           shadowAnchor
       })
       }).addTo(map);
-    })
-
+    });
+    
     this.setState({
       map
     });
