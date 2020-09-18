@@ -1,6 +1,7 @@
 import React from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import View from '@vkontakte/vkui/dist/components/View/View';
+
 import '@vkontakte/vkui/dist/vkui.css';
 
 import MapPanel from './panels/MapPanel';

@@ -7,8 +7,23 @@ import {
   PanelHeader,
   Search
 } from '@vkontakte/vkui';
+import {
+  Map,
+  TileLayer,
+  Marker,
+  Popup
+} from 'react-leaflet';
+
+import 'leaflet/dist/leaflet.css';
+import '../css/MapPanel.css';
 
 import { SEARCH_BAR_PLACEHOLDER } from '../consts/strings';
+import {
+  DEFAULT_MAP_CENTER,
+  DEFAULT_MAP_ZOOM,
+  DEFAULT_MAP_MAX_ZOOM,
+  DEFAULT_TILE_LAYER_URL
+} from '../consts/map';
 
 class MapPanel extends React.Component {
   constructor(data) {
@@ -18,7 +33,7 @@ class MapPanel extends React.Component {
       id: data.id,
       go: data.go
     }
-    
+
     this.searchRef = React.createRef();
   }
 
@@ -33,7 +48,19 @@ class MapPanel extends React.Component {
     return (
       <Panel id={this.state.id}>
         <PanelHeader visor={false} />
-        <FixedLayout vertical="bottom">
+        <Map
+          center={DEFAULT_MAP_CENTER}
+          zoom={DEFAULT_MAP_ZOOM}
+          maxZoom={DEFAULT_MAP_MAX_ZOOM}
+        >
+          <TileLayer
+            url={DEFAULT_TILE_LAYER_URL}
+          />
+      </Map>
+        <FixedLayout
+          vertical="bottom"
+          filled
+        >
           <Search />
           <Div>
             <HorizontalScroll>

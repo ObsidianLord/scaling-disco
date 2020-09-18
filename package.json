@@ -28,9 +28,11 @@
     "eruda": "^2.2.0",
     "eruda-code": "^2.0.0",
     "eruda-dom": "^2.0.0",
+    "leaflet": "^1.7.1",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
-    "react-dom": "^16.9.0"
+    "react-dom": "^16.9.0",
+    "react-leaflet": "^2.7.0"
   },
   "browserslist": {
     "production": [
