@@ -2,7 +2,75 @@
   z-index: 9999;
 }
 
+.leaflet-div-icon {
+  background: 0;
+  border: none;
+}
+
 .map-panel__map-container {
   height: 100vh;
   width: 100vw;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.map-panel__cluster-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  border-radius: 50%;
+}
+
+.map-panel__cluster-icon-1 {
+  height: 32px;
+  width: 32px;
+}
+
+.map-panel__cluster-icon-1 img {
+  height: 24px;
+  width: 24px;
+}
+
+.map-panel__cluster-icon-2 {
+  height: 64px;
+  width: 64px;
+}
+
+.map-panel__cluster-icon-2 img {
+  height: 32px;
+  width: 32px;
+}
+
+.map-panel__cluster-icon-3 {
+  height: 128px;
+  width: 128px;
+}
+
+.map-panel__cluster-icon-3 img {
+  height: 64px;
+  width: 64px;
+}
+
+.map-panel__cluster-icon-4 {
+  height: 256px;
+  width: 256px;
+}
+
+.map-panel__cluster-icon-4 img {
+  height: 128px;
+  width: 128px;
+}
+
+.map-panel__cluster-icon-5 {
+  height: 512px;
+  width: 512px;
+}
+
+.map-panel__cluster-icon-5 img {
+  height: 256px;
+  width: 256px;
 }

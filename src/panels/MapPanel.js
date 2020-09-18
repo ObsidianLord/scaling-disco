@@ -12,7 +12,6 @@ import 'leaflet.tilelayer.colorfilter/src/leaflet-tilelayer-colorfilter.min.js';
 import 'leaflet.markercluster/dist/leaflet.markercluster';
 
 import 'leaflet.markercluster/dist/MarkerCluster.css';
-import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet/dist/leaflet.css';
 import '../css/MapPanel.css';
 
@@ -30,6 +29,9 @@ import {
   DEFAULT_EMOTION_ICON_BG_ANCHOR as shadowAnchor,
 } from '../consts/map';
 
+import shadowUrl from '../img/icons/bg.png';
+
+import Categories from '../data/categories';
 import Posts from '../data/posts';
 
 class MapPanel extends React.Component {
@@ -42,6 +44,8 @@ class MapPanel extends React.Component {
       setIsLoading: props.setIsLoading,
       map: null
     }
+
+    this.iconCreateFunction = this.iconCreateFunction.bind(this);
   }
 
   componentDidMount() {
@@ -62,23 +66,73 @@ class MapPanel extends React.Component {
       { filter }
     ).addTo(map);
 
+    const markers = L.markerClusterGroup({
+      iconCreateFunction: this.iconCreateFunction,
+    });
+    map.addLayer(markers);
     Posts.forEach((post) => {
-      L.marker(post.latlng, {
+      const marker = L.marker(post.latlng, {
+        alt: post.category.key,
         icon: L.icon({
-          iconUrl: post.emotion.photo_url,
-          shadowUrl: post.emotion.bg_url,
+          iconUrl: post.category.photo_url,
+          shadowUrl,
           iconSize,
           iconAnchor,
           shadowSize,
           shadowAnchor
-      })
-      }).addTo(map);
+        })
+      });
+      markers.addLayer(marker);
     });
-    
+
+    map.addLayer(markers);
+
     this.setState({
       map
     });
     this.state.setIsLoading(false);
+  }
+
+  iconCreateFunction(cluster) {
+    const markers = cluster.getAllChildMarkers();
+    let dominantCategory;
+    let categoryOccurrences = {};
+    let maxCount = 0;
+    console.log(markers)
+    markers.forEach((marker) => {
+      if (marker.options.alt in categoryOccurrences) {
+        categoryOccurrences[marker.options.alt] += 1;
+      } else {
+        categoryOccurrences[marker.options.alt] = 1;
+      }
+      if (categoryOccurrences[marker.options.alt] > maxCount) {
+        maxCount = categoryOccurrences[marker.options.alt];
+        dominantCategory = marker.options.alt;
+      }
+    });
+    
+    const sizeMultiplier = Math.log2(maxCount) + 1;
+
+    return sizeMultiplier < 2
+      ? L.icon({
+        iconUrl: Categories[dominantCategory].photo_url,
+        shadowUrl,
+        iconSize: iconSize.map((num) => num * sizeMultiplier),
+        iconAnchor: iconAnchor.map((num) => num * sizeMultiplier),
+        shadowSize: shadowSize.map((num) => num * sizeMultiplier),
+        shadowAnchor: shadowAnchor.map((num) => num * sizeMultiplier),
+      })
+      : L.divIcon({
+        html: `
+          <div class="map-panel__cluster-icon map-panel__cluster-icon-${sizeMultiplier}">
+            <img
+              src="${Categories[dominantCategory].photo_url}"
+              alt="${Categories[dominantCategory].name}"
+            />
+            <div>${Categories[dominantCategory].name}</div>
+          </div>
+        `
+      })
   }
 
   render() {
