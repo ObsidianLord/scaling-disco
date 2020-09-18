@@ -1,0 +1,1 @@
+export const SEARCH_BAR_PLACEHOLDER = 'Поиск по теме и настроению';
