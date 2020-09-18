@@ -1,6 +1,9 @@
 import React from 'react';
 import bridge from '@vkontakte/vk-bridge';
-import View from '@vkontakte/vkui/dist/components/View/View';
+import {
+  View,
+  ScreenSpinner
+} from '@vkontakte/vkui';
 
 import '@vkontakte/vkui/dist/vkui.css';
 
@@ -12,10 +15,12 @@ class App extends React.Component {
 
     this.state = {
       activePanel: 'home',
-      history: []
+      history: [],
+      isLoading: true
     };
 
     this.go = this.go.bind(this);
+    this.setIsLoading = this.setIsLoading.bind(this);
   }
 
   componentDidMount() {
@@ -54,12 +59,22 @@ class App extends React.Component {
     }
   }
 
+  setIsLoading(isLoading) {
+    this.setState({
+      isLoading
+    });
+  }
+
   render() {
     return (
-      <View activePanel={this.state.activePanel}>
+      <View 
+        activePanel={this.state.activePanel}
+        popout={this.state.isLoading ? <ScreenSpinner /> : null}
+      >
         <MapPanel
           id='home'
           go={this.go}
+          setIsLoading={this.setIsLoading}
         />
       </View>
     )

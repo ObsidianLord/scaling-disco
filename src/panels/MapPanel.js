@@ -29,7 +29,9 @@ class MapPanel extends React.Component {
 
     this.state = {
       id: props.id,
-      go: props.go
+      go: props.go,
+      setIsLoading: props.setIsLoading,
+      map: null
     }
   }
 
@@ -50,6 +52,9 @@ class MapPanel extends React.Component {
       DEFAULT_TILE_URL,
       { filter }
     ).addTo(map);
+
+    this.state.map = map;
+    this.state.setIsLoading(false);
   }
 
   render() {
