@@ -53,7 +53,9 @@ class MapPanel extends React.Component {
       { filter }
     ).addTo(map);
 
-    this.state.map = map;
+    this.setState({
+      map
+    });
     this.state.setIsLoading(false);
   }
 
