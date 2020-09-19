@@ -77,9 +77,14 @@ class WallPanel extends React.Component {
         className="wall-panel"
       >
         <PanelHeader left={<PanelHeaderBack onClick={() => this.props.go('back')} />}>
-          {this.props.wallOptions.category.name}
+          {this.props.wallOptions.posts
+            ? this.props.wallOptions.posts[0].category.name
+            : this.props.wallOptions.category.name}
         </PanelHeader>
-        { this.props.posts
+        { this.props.wallOptions.posts && 
+          this.props.wallOptions.posts.map((post) => this.getWallPost(post))
+        }
+        { !this.props.wallOptions.posts && this.props.posts
           .filter((post) => post.category === this.props.wallOptions.category && post.emotion === this.props.wallOptions.emotion)
           .map((post) => this.getWallPost(post))
         }

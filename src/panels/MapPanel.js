@@ -86,6 +86,7 @@ class MapPanel extends React.Component {
     this.props.posts.forEach((post) => {
       const marker = L.marker(post.latlng, {
         alt: post.category.key,
+        post,
         icon: L.icon({
           iconUrl: post.category.photo_url,
           shadowUrl,
@@ -98,6 +99,23 @@ class MapPanel extends React.Component {
       markers.addLayer(marker);
     });
 
+    markers.on('click', ((e) => {
+      const post = e.layer.options.post;
+      this.showWall({
+        category: null,
+        emotion: null,
+        posts: [ post ],
+      });
+    }));
+
+    markers.on('clusterclick', ((e) => {
+      const posts = e.layer.getAllChildMarkers().map((marker) => marker.options.post);
+      this.showWall({
+        category: null,
+        emotion: null,
+        posts,
+      });
+    }));
     this.getEmotionalCategoriesList();
     this.state.map.addLayer(markers);
   }
@@ -189,7 +207,7 @@ class MapPanel extends React.Component {
     return <div
       key={emotionalCategory}
       className="text-center cursor-pointer"
-      onClick={() => this.showWall(category, emotion)}
+      onClick={() => this.showWall({ category, emotion, posts: null })}
     >
       <Avatar
         src={category.photo_url}
@@ -208,11 +226,8 @@ class MapPanel extends React.Component {
     </div>
   }
 
-  showWall(category, emotion) {
-    this.props.setWallOptions({
-      category,
-      emotion
-    });
+  showWall(options) {
+    this.props.setWallOptions(options);
     this.props.go('wall-panel');
   }
 
