@@ -133,8 +133,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: white;
+  background: rgba(256, 256, 256, 0.85);
   border-radius: 50%;
+  letter-spacing: -0.2px;
+  font-size: 14px;
+  line-height: 18px;
 }
 
 .map-panel__cluster-icon img {
@@ -155,6 +158,8 @@
 .map-panel__cluster-icon-2 {
   height: 64px;
   width: 64px;
+  font-size: 12px;
+  line-height: 14px;
 }
 
 .map-panel__cluster-icon-2 img {
@@ -165,6 +170,8 @@
 .map-panel__cluster-icon-3 {
   height: 96px;
   width: 96px;
+  font-size: 14px;
+  line-height: 18px;
 }
 
 .map-panel__cluster-icon-3 img {
