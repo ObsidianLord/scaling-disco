@@ -35,7 +35,6 @@ class WallPanel extends React.Component {
   }
 
   getWallPost(post) {
-    console.log(post)
     return <div
       className="wall-panel__post"
       key={post.id}
