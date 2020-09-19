@@ -64,8 +64,61 @@
 
 .map-panel__emotion-pin img {
   display: block;
+}
+
+.map-panel__emotion-pin-20 {
+  width: 20px;
+  height: 20px;
+}
+
+.map-panel__emotion-pin-20 img {
   width: 16px;
   height: 16px;
+}
+
+.map-panel__emotion-pin-32 {
+  width: 32px;
+  height: 32px;
+}
+
+.map-panel__emotion-pin-32 img {
+  width: 24px;
+  height: 24px;
+}
+
+.map-panel__quick-emotions {
+  position: absolute;
+  transition: all 0.75s ease-out;
+  left: calc(50vw - 16px);
+  top: calc(50vh - 16px);
+}
+
+.map-panel__quick-emotions-top--hidden {
+  top: -32px !important;
+  opacity: 0;
+}
+
+.map-panel__quick-emotions-right--hidden {
+  left: calc(100vw + 32px) !important;
+  opacity: 0;
+}
+
+.map-panel__quick-emotions-left--hidden {
+  left: -32px !important;
+}
+
+.map-panel__quick-emotions-bottom--hidden {
+  top: 100vh !important;
+  opacity: 0;
+}
+
+.map-panel__emotion-select {
+  animation: 0.75s fadein;
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .map-panel__emotional-category-list-placeholder {

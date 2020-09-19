@@ -7,6 +7,7 @@ import {
   Panel,
   PanelHeader,
   Search,
+  Select,
   Caption
 } from '@vkontakte/vkui';
 import L from 'leaflet';
@@ -43,15 +44,26 @@ class MapPanel extends React.Component {
 
     this.state = {
       map: null,
-      search: ''
+      markers: null,
+      search: '',
+      quickEmotionSelected: false,
+      screenWidth: 0,
+      screenHeight: 0,
+      footerHeight: 0,
+      headerHeight: 0,
+      selectedEmotion: null,
     }
 
     this.getClusterIcon = this.getClusterIcon.bind(this);
     this.getEmotionalCategoriesList = this.getEmotionalCategoriesList.bind(this);
     this.getEmotionalCategoryButton = this.getEmotionalCategoryButton.bind(this);
     this.getEmotionPin = this.getEmotionPin.bind(this);
+    this.getFilteredPosts = this.getFilteredPosts.bind(this);
     this.onSearch = this.onSearch.bind(this);
+    this.onEmotionSelect = this.onEmotionSelect.bind(this);
+    this.onQuickEmotionSelect = this.onQuickEmotionSelect.bind(this);
     this.showWall = this.showWall.bind(this);
+    this.resize = this.resize.bind(this);
   }
 
   componentDidMount() {
@@ -75,15 +87,27 @@ class MapPanel extends React.Component {
     this.setState({
       map
     });
+    window.addEventListener('resize', this.resize);
+    this.resize();
     this.props.setIsLoading(false);
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.resize);
+  }
+
   componentDidUpdate() {
+    this.state.map.eachLayer((layer) => {
+      if (!layer._url) {
+        this.state.map.removeLayer(layer);
+      }
+    });
+
     const markers = L.markerClusterGroup({
       iconCreateFunction: this.getClusterIcon,
     });
     
-    this.props.posts.forEach((post) => {
+    this.getFilteredPosts().forEach((post) => {
       const marker = L.marker(post.latlng, {
         alt: post.category.key,
         post,
@@ -117,6 +141,10 @@ class MapPanel extends React.Component {
       });
     }));
     this.getEmotionalCategoriesList();
+
+    if (!this.state.quickEmotionSelected) {
+      
+    }
     this.state.map.addLayer(markers);
   }
 
@@ -161,15 +189,59 @@ class MapPanel extends React.Component {
       })
   }
 
+  getFilteredPosts() {
+    const searchedPosts = this.state.search
+      ? this.props.posts.filter((post) => 
+        post.category.name.toLowerCase().indexOf(this.state.search.toLowerCase()) > -1
+          || post.emotion.name.toLowerCase().indexOf(this.state.search.toLowerCase()) > -1)
+      : this.props.posts;
+    if (this.state.selectedEmotion) {
+      return searchedPosts.filter((post) => {
+        return post.emotion === this.state.selectedEmotion;
+      })
+    }
+    return searchedPosts;
+  }
+
   onSearch(e) {
     this.setState({
       search: e.target.value
     });
   }
 
+  onEmotionSelect(emotion) {
+    this.setState({
+      selectedEmotion: emotion
+    });
+  }
+
+  onEmotionSelectByKey(emotionKey) {
+    this.setState({
+      selectedEmotion: Emotions[emotionKey]
+    });
+  }
+
+  onQuickEmotionSelect(emotion) {
+    this.setState({
+      quickEmotionSelected: true
+    });
+    this.onEmotionSelect(emotion);
+  }
+
+  resize() {
+    const header = document.querySelector('.PanelHeader__in');
+    const footer = document.querySelector('.FixedLayout--bottom');
+    this.setState({
+      screenWidth: window.innerWidth,
+      screenHeight: window.innerHeight,
+      headerHeight: header ? header.clientHeight : 0,
+      footerHeight: footer ? footer.clientHeight : 0,
+    });
+  }
+
   getEmotionalCategoriesList() {
     const categoryOccurrences = {};
-    this.props.posts.forEach((post) => {
+    this.getFilteredPosts().forEach((post) => {
       const combinedKey = `${post.category.key}:${post.emotion.key}`;
       if (combinedKey in categoryOccurrences) {
         categoryOccurrences[combinedKey] += 1;
@@ -201,28 +273,31 @@ class MapPanel extends React.Component {
     const category = Categories[categoryKey];
     const emotion = Emotions[emotionKey];
     const suitsFilter = !this.state.search
-      || category.name.toLowerCase().indexOf(this.state.search.toLowerCase()) >= 0
-      || emotion.name.toLowerCase().indexOf(this.state.search.toLowerCase()) >= 0
+      || category.name.toLowerCase().indexOf(this.state.search.toLowerCase()) > -1
+      || emotion.name.toLowerCase().indexOf(this.state.search.toLowerCase()) > -1
     if (!suitsFilter) return null;
     return <div
       key={emotionalCategory}
-      className="text-center cursor-pointer"
+      className="text-center cursor-pointer bg-none box-shadow-none"
       onClick={() => this.showWall({ category, emotion, posts: null })}
     >
       <Avatar
         src={category.photo_url}
         size={64}
         className="map-panel__emotional-category-avatar"
-      >{ this.getEmotionPin(emotion.photo_url) }</Avatar>
+      >{ this.getEmotionPin(emotion, 20) }</Avatar>
       <div className="map-panel__emotional-category-text cursor-pointer">
         { Categories[categoryKey].name }
       </div>
     </div>
   }
 
-  getEmotionPin(emotionPhotoSrc) {
-    return <div className="map-panel__emotion-pin">
-      <img src={emotionPhotoSrc} />
+  getEmotionPin(emotion, size) {
+    return <div className={`map-panel__emotion-pin map-panel__emotion-pin-${size}`}>
+      <img
+        src={emotion.photo_url}
+        alt={emotion.name}
+      />
     </div>
   }
 
@@ -234,7 +309,90 @@ class MapPanel extends React.Component {
   render() {
     return (
       <Panel id={this.props.id}>
-        <PanelHeader visor={false} />
+        <PanelHeader visor={false}>
+        </PanelHeader>
+        <FixedLayout>
+          {
+            this.state.quickEmotionSelected &&
+            <Select
+              value={this.state.selectedEmotion.key}
+              onChange={(e) => this.onEmotionSelectByKey(e.target.value)}
+              className="map-panel__emotion-select"
+              style={
+                this.state.screenWidth !== 0
+                ? { left: this.state.screenWidth / 2, top: this.state.screenHeight - this.state.footerHeight - 52, transform: 'translateX(-50%)' }
+                : {}
+              }
+            >
+              { Object.values(Emotions).map((emotion) => <option
+                  key={emotion.key}
+                  value={emotion.key}>
+                    {`${emotion.emoji} ${emotion.name} настроение`}
+                </option>
+              )}
+            </Select>
+          }
+          <div
+            className={
+              !this.state.quickEmotionSelected
+                ? 'map-panel__quick-emotions'
+                : 'map-panel__quick-emotions map-panel__quick-emotions-top--hidden'
+            }
+            style={
+              this.state.screenWidth !== 0
+              ? { left: this.state.screenWidth / 2 - 16, top: this.state.headerHeight + 8 }
+              : {}
+            }
+            onClick={() => this.onQuickEmotionSelect(Emotions.ENERGETIC)}
+          >
+            { this.getEmotionPin(Emotions.ENERGETIC, 32) }
+          </div>
+          <div
+            className={
+              !this.state.quickEmotionSelected
+                ? 'map-panel__quick-emotions'
+                : 'map-panel__quick-emotions map-panel__quick-emotions-right--hidden'
+            }
+            style={
+              this.state.screenWidth !== 0
+              ? { left: this.state.screenWidth - 54, top: (this.state.screenHeight - this.state.footerHeight) / 2 + 16 }
+              : {}
+            }
+            onClick={() => this.onQuickEmotionSelect(Emotions.HAPPY)}
+          >
+            { this.getEmotionPin(Emotions.HAPPY, 32) }
+          </div>
+          <div 
+            className={
+              !this.state.quickEmotionSelected
+                ? 'map-panel__quick-emotions'
+                : 'map-panel__quick-emotions map-panel__quick-emotions-bottom--hidden'
+            }
+            style={
+              this.state.screenWidth !== 0
+              ? { left: this.state.screenWidth / 2 - 16, top: this.state.screenHeight - this.state.footerHeight - 52 }
+              : {}
+            }
+            onClick={() => this.onQuickEmotionSelect(Emotions.SLEEPY)}
+          >
+            { this.getEmotionPin(Emotions.SLEEPY, 32) }
+          </div>
+          <div
+            className={
+              !this.state.quickEmotionSelected
+                ? 'map-panel__quick-emotions'
+                : 'map-panel__quick-emotions map-panel__quick-emotions-left--hidden'
+            }
+            style={
+              this.state.screenWidth !== 0
+              ? { left: 16, top: (this.state.screenHeight - this.state.footerHeight) / 2 + 16 }
+              : {}
+            }
+            onClick={() => this.onQuickEmotionSelect(Emotions.SAD)}
+          >
+            { this.getEmotionPin(Emotions.SAD, 32) }
+          </div>
+        </FixedLayout>
         <div
           id="map"
           className="map-panel__map-container"

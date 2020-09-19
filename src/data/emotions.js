@@ -8,25 +8,30 @@ export default {
   HAPPY: {
     key: 'HAPPY',
     name: 'Веселое',
+    emoji: '😃',
     photo_url: happy,
   },
   ENERGETIC: {
     key: 'ENERGETIC',
     name: 'Энергичное',
+    emoji: '😜',
     photo_url: energetic,
   },
   SAD: {
     key: 'SAD',
     name: 'Грустное',
+    emoji: '🙁',
     photo_url: sad,
   },
   SLEEPY: {
     key: 'SLEEPY',
+    emoji: '😴',
     name: 'Сонное',
     photo_url: sleepy,
   },
   CALM: {
     key: 'CALM',
+    emoji: '😐',
     name: 'Спокойное',
     photo_url: calm,
   },
