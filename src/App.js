@@ -9,6 +9,9 @@ import '@vkontakte/vkui/dist/vkui.css';
 
 import MapPanel from './panels/MapPanel';
 
+import { DEFAULT_GENERATED_POSTS_COUNT } from './consts/config';
+import { getRandomPost } from './api/api';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -16,11 +19,13 @@ class App extends React.Component {
     this.state = {
       activePanel: 'home',
       history: [],
-      isLoading: true
+      isLoading: true,
+      posts: [],
     };
 
     this.go = this.go.bind(this);
     this.setIsLoading = this.setIsLoading.bind(this);
+    this.generatePosts = this.generatePosts.bind(this);
   }
 
   componentDidMount() {
@@ -38,6 +43,7 @@ class App extends React.Component {
         bridge.send('VKWebAppSetViewSettings', {'status_bar_style': status_bar});
       }
     });
+    this.generatePosts(DEFAULT_GENERATED_POSTS_COUNT);
   }
 
   componentWillUnmount() {
@@ -65,6 +71,18 @@ class App extends React.Component {
     });
   }
 
+  generatePosts(amount) {
+    const posts = [];
+    for (let i = 0; i < amount; i++) {
+      posts.push(
+        getRandomPost(i)
+      );
+    }
+    this.setState({
+      posts
+    });
+  }
+
   render() {
     return (
       <View 
@@ -72,7 +90,8 @@ class App extends React.Component {
         popout={this.state.isLoading ? <ScreenSpinner /> : null}
       >
         <MapPanel
-          id='home'
+          id="home"
+          posts={this.state.posts}
           go={this.go}
           setIsLoading={this.setIsLoading}
         />

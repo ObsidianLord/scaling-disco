@@ -32,20 +32,16 @@ import {
 import shadowUrl from '../img/icons/bg.png';
 
 import Categories from '../data/categories';
-import Posts from '../data/posts';
 
 class MapPanel extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      id: props.id,
-      go: props.go,
-      setIsLoading: props.setIsLoading,
       map: null
     }
 
-    this.iconCreateFunction = this.iconCreateFunction.bind(this);
+    this.getClusterIcon = this.getClusterIcon.bind(this);
   }
 
   componentDidMount() {
@@ -66,11 +62,18 @@ class MapPanel extends React.Component {
       { filter }
     ).addTo(map);
 
-    const markers = L.markerClusterGroup({
-      iconCreateFunction: this.iconCreateFunction,
+    this.setState({
+      map
     });
-    map.addLayer(markers);
-    Posts.forEach((post) => {
+    this.props.setIsLoading(false);
+  }
+
+  componentDidUpdate() {
+    const markers = L.markerClusterGroup({
+      iconCreateFunction: this.getClusterIcon,
+    });
+    
+    this.props.posts.forEach((post) => {
       const marker = L.marker(post.latlng, {
         alt: post.category.key,
         icon: L.icon({
@@ -85,20 +88,14 @@ class MapPanel extends React.Component {
       markers.addLayer(marker);
     });
 
-    map.addLayer(markers);
-
-    this.setState({
-      map
-    });
-    this.state.setIsLoading(false);
+    this.state.map.addLayer(markers);
   }
 
-  iconCreateFunction(cluster) {
+  getClusterIcon(cluster) {
     const markers = cluster.getAllChildMarkers();
     let dominantCategory;
     let categoryOccurrences = {};
     let maxCount = 0;
-    console.log(markers)
     markers.forEach((marker) => {
       if (marker.options.alt in categoryOccurrences) {
         categoryOccurrences[marker.options.alt] += 1;
@@ -117,10 +114,10 @@ class MapPanel extends React.Component {
       ? L.icon({
         iconUrl: Categories[dominantCategory].photo_url,
         shadowUrl,
-        iconSize: iconSize.map((num) => num * sizeMultiplier),
-        iconAnchor: iconAnchor.map((num) => num * sizeMultiplier),
-        shadowSize: shadowSize.map((num) => num * sizeMultiplier),
-        shadowAnchor: shadowAnchor.map((num) => num * sizeMultiplier),
+        iconSize,
+        iconAnchor,
+        shadowSize,
+        shadowAnchor,
       })
       : L.divIcon({
         html: `
@@ -137,7 +134,7 @@ class MapPanel extends React.Component {
 
   render() {
     return (
-      <Panel id={this.state.id}>
+      <Panel id={this.props.id}>
         <PanelHeader visor={false} />
         <div
           id="map"

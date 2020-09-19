@@ -17,12 +17,19 @@
 }
 
 .map-panel__cluster-icon {
+  height: 96px;
+  width: 96px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background: white;
   border-radius: 50%;
+}
+
+.map-panel__cluster-icon img {
+  height: 48px;
+  width: 48px;
 }
 
 .map-panel__cluster-icon-1 {
@@ -46,31 +53,11 @@
 }
 
 .map-panel__cluster-icon-3 {
-  height: 128px;
-  width: 128px;
+  height: 96px;
+  width: 96px;
 }
 
 .map-panel__cluster-icon-3 img {
-  height: 64px;
-  width: 64px;
-}
-
-.map-panel__cluster-icon-4 {
-  height: 256px;
-  width: 256px;
-}
-
-.map-panel__cluster-icon-4 img {
-  height: 128px;
-  width: 128px;
-}
-
-.map-panel__cluster-icon-5 {
-  height: 512px;
-  width: 512px;
-}
-
-.map-panel__cluster-icon-5 img {
-  height: 256px;
-  width: 256px;
+  height: 48px;
+  width: 48px;
 }
