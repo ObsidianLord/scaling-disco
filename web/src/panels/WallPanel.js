@@ -31,7 +31,7 @@ class WallPanel extends React.Component {
   }
 
   componentDidMount() {
-    
+
   }
 
   getWallPost(post) {
@@ -80,10 +80,10 @@ class WallPanel extends React.Component {
       >
         <PanelHeader left={<PanelHeaderBack onClick={() => this.props.go('back')} />}>
           {this.props.wallOptions.posts
-            ? this.props.wallOptions.posts[0].category.name
+            ? this.props.wallOptions.wallName
             : this.props.wallOptions.category.name}
         </PanelHeader>
-        { this.props.wallOptions.posts && 
+        { this.props.wallOptions.posts &&
           this.props.wallOptions.posts.map((post) => this.getWallPost(post))
         }
         { !this.props.wallOptions.posts && this.props.posts

@@ -54,7 +54,8 @@ class MapPanel extends React.Component {
       headerHeight: 0,
       selectedEmotion: null,
       savedZoom: null,
-      savedCenter: null
+      savedCenter: null,
+      darkMode: false
     }
 
     this.getClusterIcon = this.getClusterIcon.bind(this);
@@ -72,6 +73,7 @@ class MapPanel extends React.Component {
   componentDidMount() {
     const search = document.querySelector('.Search__placeholder-text');
     const schemeAttribute = document.body.attributes.getNamedItem('scheme');
+    const darkMode = schemeAttribute && schemeAttribute.value.indexOf('light') === -1;
 
     if (search) {
       search.textContent = SEARCH_BAR_PLACEHOLDER;
@@ -87,13 +89,15 @@ class MapPanel extends React.Component {
     L.tileLayer.colorFilter(
       DEFAULT_TILE_URL,
       {
-        filter: schemeAttribute && schemeAttribute.value.indexOf('light') === -1
-          ? DEFAULT_MAP_STYLE_DARK : DEFAULT_MAP_STYLE_LIGHT
+        filter: darkMode
+          ? DEFAULT_MAP_STYLE_DARK
+          : DEFAULT_MAP_STYLE_LIGHT
       }
     ).addTo(map);
 
     this.setState({
-      map
+      map,
+      darkMode
     });
 
     if (this.props.savedMapView) {
@@ -145,6 +149,7 @@ class MapPanel extends React.Component {
       this.showWall({
         category: null,
         emotion: null,
+        wallName: post.category.name,
         posts: [ post ],
       });
     }));
@@ -154,6 +159,7 @@ class MapPanel extends React.Component {
       this.showWall({
         category: null,
         emotion: null,
+        wallName: e.originalEvent.target.dataset.name,
         posts,
       });
     }));
@@ -180,23 +186,21 @@ class MapPanel extends React.Component {
 
     const sizeMultiplier = Math.log2(maxCount) + 1;
 
-    return sizeMultiplier < 2
-      ? L.icon({
-        iconUrl: Categories[dominantCategory].photo_url,
-        shadowUrl,
-        iconSize,
-        iconAnchor,
-        shadowSize,
-        shadowAnchor,
-      })
-      : L.divIcon({
+    return L.divIcon({
         html: `
-          <div class="map-panel__cluster-icon map-panel__cluster-icon-${sizeMultiplier}">
+          <div
+            data-name="${Categories[dominantCategory].name}"
+            class="map-panel__cluster-icon map-panel__cluster-icon-${sizeMultiplier} ${this.state.darkMode ? ' map-panel__cluster-icon--dark' : ''}"
+          >
             <img
+              data-name="${Categories[dominantCategory].name}"
               src="${Categories[dominantCategory].photo_url}"
               alt="${Categories[dominantCategory].name}"
             />
-            <div>${Categories[dominantCategory].name}</div>
+            <div
+              data-name="${Categories[dominantCategory].name}"
+              class="map-panel__cluster-icon-text ${sizeMultiplier < 2 ? 'd-none' : ''}">${Categories[dominantCategory].name}
+            </div>
           </div>
         `
       })
@@ -302,7 +306,7 @@ class MapPanel extends React.Component {
     return <div
       key={emotionalCategory}
       className="text-center cursor-pointer bg-none box-shadow-none"
-      onClick={() => this.showWall({ category, emotion, posts: null })}
+      onClick={() => this.showWall({ category, emotion, wallName: category.name, posts: null })}
     >
       <Avatar
         src={category.photo_url}

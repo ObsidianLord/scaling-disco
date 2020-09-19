@@ -1,34 +1,18 @@
-[<img width="134" src="https://vk.com/images/apps/mini_apps/vk_mini_apps_logo.svg">](https://vk.com/services)
+# Bepis | Карта эмоций. Веб
 
-# Create VK Mini App [![npm][npm]][npm-url] [![deps][deps]][deps-url]
+## Ядро и конфигурация
+Все записи в приложении генерируются функциями из `/web/src/api/api.js` случайным образом, используя данные, хранящиеся в директории `/web/src/data`.
+Внутри файла `/web/src/consts/config.js` хранятся 2 основные постоянные конфигурации:
+1. `DEFAULT_GENERATED_POSTS_COUNT` - количество генерируемых записей по умолчанию (default: 250)
+2. `DEFAULT_GENERATED_POSTS_RADIUS` - разброс генерируемых записей по карте по умолчанию (default: 0.05)
 
-## How to install
-
-### Create VK Mini App with gh-pages deploy
-
-`npx @vkontakte/create-vk-mini-app <app-directory-name>`
-
-### Create VK Mini App with Zeit deploy
-
-Firstly, you have to create Zeit account and connect it with your GitHub profile — https://zeit.co/
-
-`npx @vkontakte/create-vk-mini-app <app-directory-name> --zeit`
-
-### Create VK Mini App with Surge deploy
-
-Firstly, you have to create Surge account and Surge-domain — https://surge.sh/
-
-`npx @vkontakte/create-vk-mini-app <app-directory-name> --surge <surge-domain>`
-
-## How to start work with app
-
-Go to created folder and run:
-`yarn start` || `npm start` — this will start dev server with hot reload on `localhost:10888`.
-
-`yarn run build` || `npm run build` — this will build production bundle, with tree-shaking, uglify and all this modern fancy stuff
-
-[npm]: https://img.shields.io/npm/v/@vkontakte/create-vk-mini-app.svg
-[npm-url]: https://npmjs.com/package/@vkontakte/create-vk-mini-app
-
-[deps]: https://img.shields.io/david/vkcom/create-vk-mini-app.svg
-[deps-url]: https://david-dm.org/vkcom/create-vk-mini-app
+## Главные фичи
+1. Генерация случайных постов при инициализации приложения
+2. Темная тема
+3. Список отображаемых категорий на карте в футере отсортирован по уменьшению кол-ва записей данной пары категория-эмоция
+4. Анимации фильтров настроения
+5. Кластеризация
+6. Эффективная комбинированная фильтрация текстовым поиском и выбором конкретного настроения
+7. Сохранение состояния карты при переходе на панель просмотра записей
+8. Отображение актуальных записей при выборе кластера
+9. Использование лишь одной дополнительной open-source библиотеки Leaflet для отрисовки карты
