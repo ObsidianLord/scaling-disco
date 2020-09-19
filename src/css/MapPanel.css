@@ -1,5 +1,7 @@
 .FixedLayout {
   z-index: 9999;
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
 }
 
 .leaflet-div-icon {
@@ -14,6 +16,61 @@
   font-weight: 600;
   font-size: 16px;
   line-height: 20px;
+}
+
+.map-panel__search {
+  padding-top: 12px;
+  padding-bottom: 0;
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+}
+
+.map-panel__emotional-category-avatar .Avatar__in {
+  margin-right: 16px;
+}
+
+.map-panel__emotional-category-text {
+  margin-top: 2px;
+  margin-right: 16px;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.map-panel__emotional-category-avatar img {
+  position: absolute;
+  background: none;
+  left: 50%;
+  top: 50%;
+  border-radius: 0 !important;
+  transform: translate(-50%, -50%);
+  max-width: 24px;
+  max-height: 24px;
+}
+
+.map-panel__emotion-pin {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 3px;
+  left: 0px;
+  top: 0px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--image_border);
+}
+
+.map-panel__emotion-pin img {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+.map-panel__emotional-category-list-placeholder {
+  padding: 32px 0;
+  width: 100%;
 }
 
 .map-panel__cluster-icon {

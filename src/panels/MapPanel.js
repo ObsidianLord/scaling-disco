@@ -1,11 +1,13 @@
 import React from 'react';
 import {
+  Avatar,
   Div,
   FixedLayout,
   HorizontalScroll,
   Panel,
   PanelHeader,
-  Search
+  Search,
+  Caption
 } from '@vkontakte/vkui';
 import L from 'leaflet';
 import 'leaflet.tilelayer.colorfilter/src/leaflet-tilelayer-colorfilter.min.js';
@@ -13,6 +15,7 @@ import 'leaflet.markercluster/dist/leaflet.markercluster';
 
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet/dist/leaflet.css';
+import '../css/common.css';
 import '../css/MapPanel.css';
 
 import { SEARCH_BAR_PLACEHOLDER } from '../consts/strings';
@@ -32,16 +35,22 @@ import {
 import shadowUrl from '../img/icons/bg.png';
 
 import Categories from '../data/categories';
+import Emotions from '../data/emotions';
 
 class MapPanel extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      map: null
+      map: null,
+      search: ''
     }
 
     this.getClusterIcon = this.getClusterIcon.bind(this);
+    this.getEmotionalCategoriesList = this.getEmotionalCategoriesList.bind(this);
+    this.getEmotionalCategoryButton = this.getEmotionalCategoryButton.bind(this);
+    this.getEmotionPin = this.getEmotionPin.bind(this);
+    this.onSearch = this.onSearch.bind(this);
   }
 
   componentDidMount() {
@@ -88,6 +97,7 @@ class MapPanel extends React.Component {
       markers.addLayer(marker);
     });
 
+    this.getEmotionalCategoriesList();
     this.state.map.addLayer(markers);
   }
 
@@ -132,6 +142,70 @@ class MapPanel extends React.Component {
       })
   }
 
+  onSearch(e) {
+    this.setState({
+      search: e.target.value
+    });
+  }
+
+  getEmotionalCategoriesList() {
+    const categoryOccurrences = {};
+    this.props.posts.forEach((post) => {
+      const combinedKey = `${post.category.key}:${post.emotion.key}`;
+      if (combinedKey in categoryOccurrences) {
+        categoryOccurrences[combinedKey] += 1;
+      } else {
+        categoryOccurrences[combinedKey] = 1;
+      }
+    });
+    const occurrencesArray = Object.entries(categoryOccurrences)
+      .sort((a, b) => b[1] - a[1])
+      .map((categoryOccurrency) => categoryOccurrency[0]);
+
+    const elementsArray = occurrencesArray.map(
+      (category) => this.getEmotionalCategoryButton(category)
+    );
+
+    if (elementsArray.some((el) => el !== null)) {
+      return elementsArray;
+    } else {
+      return <Caption
+        level={1}
+        weight="regular"
+        className="text-center map-panel__emotional-category-list-placeholder"
+      >Записей не найдено</Caption>
+    }
+  }
+
+  getEmotionalCategoryButton(emotionalCategory) {
+    const [ categoryKey, emotionKey ] = emotionalCategory.split(':');
+    const category = Categories[categoryKey];
+    const emotion = Emotions[emotionKey];
+    const suitsFilter = !this.state.search
+      || category.name.toLowerCase().indexOf(this.state.search.toLowerCase()) >= 0
+      || emotion.name.toLowerCase().indexOf(this.state.search.toLowerCase()) >= 0
+    if (!suitsFilter) return null;
+    return <div
+      key={emotionalCategory}
+      className="text-center"
+    >
+      <Avatar
+        src={category.photo_url}
+        size={64}
+        className="map-panel__emotional-category-avatar"
+      >{ this.getEmotionPin(emotion.photo_url) }</Avatar>
+      <div className="map-panel__emotional-category-text">
+        { Categories[categoryKey].name }
+      </div>
+    </div>
+  }
+
+  getEmotionPin(emotionPhotoSrc) {
+    return <div className="map-panel__emotion-pin">
+      <img src={emotionPhotoSrc} />
+    </div>
+  }
+
   render() {
     return (
       <Panel id={this.props.id}>
@@ -144,9 +218,16 @@ class MapPanel extends React.Component {
           vertical="bottom"
           filled
         >
-          <Search />
+          <Search
+            value={this.state.search}
+            onChange={this.onSearch}
+            className="map-panel__search"
+          />
           <Div>
             <HorizontalScroll>
+              <div className="d-flex">
+                {this.getEmotionalCategoriesList()}
+              </div>
             </HorizontalScroll>
           </Div>
         </FixedLayout>
