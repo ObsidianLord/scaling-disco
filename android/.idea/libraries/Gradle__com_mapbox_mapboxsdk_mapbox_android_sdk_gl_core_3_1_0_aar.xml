@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.mapbox.mapboxsdk:mapbox-android-sdk-gl-core:3.1.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/95c278250403005a7056fc5943a40dbd/jetified-mapbox-android-sdk-gl-core-3.1.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/95c278250403005a7056fc5943a40dbd/jetified-mapbox-android-sdk-gl-core-3.1.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/95c278250403005a7056fc5943a40dbd/jetified-mapbox-android-sdk-gl-core-3.1.0/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mapbox.mapboxsdk/mapbox-android-sdk-gl-core/3.1.0/4b8877b15845775f21d035acfd0d3da746cbf6ba/mapbox-android-sdk-gl-core-3.1.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.mapbox.mapboxsdk/mapbox-android-sdk-gl-core/3.1.0/4b8877b15845775f21d035acfd0d3da746cbf6ba/mapbox-android-sdk-gl-core-3.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
