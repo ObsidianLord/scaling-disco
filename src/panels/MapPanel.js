@@ -51,6 +51,7 @@ class MapPanel extends React.Component {
     this.getEmotionalCategoryButton = this.getEmotionalCategoryButton.bind(this);
     this.getEmotionPin = this.getEmotionPin.bind(this);
     this.onSearch = this.onSearch.bind(this);
+    this.showWall = this.showWall.bind(this);
   }
 
   componentDidMount() {
@@ -187,14 +188,15 @@ class MapPanel extends React.Component {
     if (!suitsFilter) return null;
     return <div
       key={emotionalCategory}
-      className="text-center"
+      className="text-center cursor-pointer"
+      onClick={() => this.showWall(category, emotion)}
     >
       <Avatar
         src={category.photo_url}
         size={64}
         className="map-panel__emotional-category-avatar"
       >{ this.getEmotionPin(emotion.photo_url) }</Avatar>
-      <div className="map-panel__emotional-category-text">
+      <div className="map-panel__emotional-category-text cursor-pointer">
         { Categories[categoryKey].name }
       </div>
     </div>
@@ -204,6 +206,14 @@ class MapPanel extends React.Component {
     return <div className="map-panel__emotion-pin">
       <img src={emotionPhotoSrc} />
     </div>
+  }
+
+  showWall(category, emotion) {
+    this.props.setWallOptions({
+      category,
+      emotion
+    });
+    this.props.go('wall-panel');
   }
 
   render() {

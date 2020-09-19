@@ -6,6 +6,26 @@
   text-align: center;
 }
 
+.text-placeholder {
+  color: var(--text_placeholder);
+}
+
 .position-absolute {
   position: absolute;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.justify-content-flex-end {
+  justify-content: flex-end;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
 }

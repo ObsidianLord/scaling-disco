@@ -11,20 +11,23 @@ import MapPanel from './panels/MapPanel';
 
 import { DEFAULT_GENERATED_POSTS_COUNT } from './consts/config';
 import { getRandomPost } from './api/api';
+import WallPanel from './panels/WallPanel';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      activePanel: 'home',
+      activePanel: 'map-panel',
       history: [],
       isLoading: true,
       posts: [],
+      wallOptions: {}
     };
 
     this.go = this.go.bind(this);
     this.setIsLoading = this.setIsLoading.bind(this);
+    this.setWallOptions = this.setWallOptions.bind(this);
     this.generatePosts = this.generatePosts.bind(this);
   }
 
@@ -71,6 +74,12 @@ class App extends React.Component {
     });
   }
 
+  setWallOptions(wallOptions) {
+    this.setState({
+      wallOptions
+    });
+  }
+
   generatePosts(amount) {
     const posts = [];
     for (let i = 0; i < amount; i++) {
@@ -90,8 +99,16 @@ class App extends React.Component {
         popout={this.state.isLoading ? <ScreenSpinner /> : null}
       >
         <MapPanel
-          id="home"
+          id="map-panel"
           posts={this.state.posts}
+          go={this.go}
+          setIsLoading={this.setIsLoading}
+          setWallOptions={this.setWallOptions}
+        />
+        <WallPanel
+          id="wall-panel"
+          posts={this.state.posts}
+          wallOptions={this.state.wallOptions}
           go={this.go}
           setIsLoading={this.setIsLoading}
         />

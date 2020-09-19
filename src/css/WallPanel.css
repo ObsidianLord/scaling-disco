@@ -1,0 +1,26 @@
+.wall-panel, .wall-panel .Panel__in {
+  background: var(--background_page);
+}
+
+.Separator {
+  background: var(--background_content);
+}
+
+.wall-panel__post {
+  margin-top: 10px;
+  background: var(--background_content);
+}
+
+.wall-panel__post-img {
+  object-fit: cover;
+  width: 100%;
+  max-height: 320px;
+}
+
+.wall-panel__post-actions .Icon {
+  margin-right: 6px;
+}
+
+.wall-panel__post-actions .Subhead:not(:last-child) {
+  margin-right: 12px;
+}
