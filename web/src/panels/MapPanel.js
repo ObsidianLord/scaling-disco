@@ -210,7 +210,7 @@ class MapPanel extends React.Component {
       : this.props.posts;
     if (this.state.selectedEmotion) {
       return searchedPosts.filter((post) => {
-        return post.emotion === this.state.selectedEmotion;
+        return this.state.selectedEmotion.key === 'NONE' || post.emotion === this.state.selectedEmotion;
       })
     }
     return searchedPosts;
@@ -229,9 +229,19 @@ class MapPanel extends React.Component {
   }
 
   onEmotionSelectByKey(emotionKey) {
-    this.setState({
-      selectedEmotion: Emotions[emotionKey]
-    });
+    if (emotionKey === 'NONE') {
+      this.setState({
+        selectedEmotion: {
+          key: 'NONE',
+          emoji: '✨',
+          name: 'Любое',
+        }
+      });
+    } else {
+      this.setState({
+        selectedEmotion: Emotions[emotionKey]
+      });
+    }
   }
 
   onQuickEmotionSelect(emotion) {
@@ -337,7 +347,13 @@ class MapPanel extends React.Component {
                 : {}
               }
             >
-              { Object.values(Emotions).map((emotion) => <option
+              { Object.values(Emotions)
+                .concat([{
+                  key: 'NONE',
+                  emoji: '✨',
+                  name: 'Любое',
+                }])
+                .map((emotion) => <option
                   key={emotion.key}
                   value={emotion.key}>
                     {`${emotion.emoji} ${emotion.name} настроение`}
