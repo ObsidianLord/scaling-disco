@@ -8,6 +8,10 @@ export const DEFAULT_TILE_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/v
 export const DEFAULT_MAP_STYLE_LIGHT = [
   'grayscale:100%'
 ]
+export const DEFAULT_MAP_STYLE_DARK = [
+  'grayscale:100%',
+  'invert:100%',
+]
 
 export const DEFAULT_EMOTION_ICON_SIZE = [24, 24];
 export const DEFAULT_EMOTION_ICON_ANCHOR = [12, 12];

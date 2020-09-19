@@ -26,7 +26,8 @@ import {
   DEFAULT_MAP_MAX_ZOOM as maxZoom,
   DEFAULT_MAP_ZOOM_CONTROL as zoomControl,
   DEFAULT_TILE_URL,
-  DEFAULT_MAP_STYLE_LIGHT as filter,
+  DEFAULT_MAP_STYLE_LIGHT,
+  DEFAULT_MAP_STYLE_DARK,
   DEFAULT_EMOTION_ICON_SIZE as iconSize,
   DEFAULT_EMOTION_ICON_ANCHOR as iconAnchor,
   DEFAULT_EMOTION_ICON_BG_SIZE as shadowSize,
@@ -70,6 +71,8 @@ class MapPanel extends React.Component {
 
   componentDidMount() {
     const search = document.querySelector('.Search__placeholder-text');
+    const schemeAttribute = document.body.attributes.getNamedItem('scheme');
+
     if (search) {
       search.textContent = SEARCH_BAR_PLACEHOLDER;
     }
@@ -83,7 +86,10 @@ class MapPanel extends React.Component {
 
     L.tileLayer.colorFilter(
       DEFAULT_TILE_URL,
-      { filter }
+      {
+        filter: schemeAttribute && schemeAttribute.value.indexOf('light') === -1
+          ? DEFAULT_MAP_STYLE_DARK : DEFAULT_MAP_STYLE_LIGHT
+      }
     ).addTo(map);
 
     this.setState({
