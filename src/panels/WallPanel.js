@@ -35,6 +35,7 @@ class WallPanel extends React.Component {
   }
 
   getWallPost(post) {
+    console.log(post)
     return <div
       className="wall-panel__post"
       key={post.id}
@@ -47,9 +48,11 @@ class WallPanel extends React.Component {
       >
         {post.author}
       </SimpleCell>
-      { post.text && <Text>
-        { post.text }
-      </Text> }
+      { post.text && <Div>
+        <Text>
+          { post.text }
+        </Text>
+      </Div> }
       { post.photo_url && <img
         src={post.photo_url}
         alt={post.category.name}
