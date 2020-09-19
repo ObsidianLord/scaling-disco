@@ -52,6 +52,8 @@ class MapPanel extends React.Component {
       footerHeight: 0,
       headerHeight: 0,
       selectedEmotion: null,
+      savedZoom: null,
+      savedCenter: null
     }
 
     this.getClusterIcon = this.getClusterIcon.bind(this);
@@ -73,12 +75,12 @@ class MapPanel extends React.Component {
     }
 
     const map = L.map('map', {
-      center,
+      center: this.state.savedCenter ?? center,
       maxZoom,
-      zoom,
+      zoom: this.state.savedZoom ?? zoom,
       zoomControl
     });
-  
+
     L.tileLayer.colorFilter(
       DEFAULT_TILE_URL,
       { filter }
@@ -87,12 +89,21 @@ class MapPanel extends React.Component {
     this.setState({
       map
     });
+
+    if (this.props.savedMapView) {
+      map.setView(this.props.savedMapView.center, this.props.savedMapView.zoom);
+    }
+
     window.addEventListener('resize', this.resize);
     this.resize();
     this.props.setIsLoading(false);
   }
 
   componentWillUnmount() {
+    this.props.setSavedMapView({
+      center: this.state.map.getCenter(),
+      zoom: this.state.map.getZoom(),
+    })
     window.removeEventListener('resize', this.resize);
   }
 
@@ -106,7 +117,7 @@ class MapPanel extends React.Component {
     const markers = L.markerClusterGroup({
       iconCreateFunction: this.getClusterIcon,
     });
-    
+
     this.getFilteredPosts().forEach((post) => {
       const marker = L.marker(post.latlng, {
         alt: post.category.key,
@@ -141,10 +152,6 @@ class MapPanel extends React.Component {
       });
     }));
     this.getEmotionalCategoriesList();
-
-    if (!this.state.quickEmotionSelected) {
-      
-    }
     this.state.map.addLayer(markers);
   }
 
@@ -164,7 +171,7 @@ class MapPanel extends React.Component {
         dominantCategory = marker.options.alt;
       }
     });
-    
+
     const sizeMultiplier = Math.log2(maxCount) + 1;
 
     return sizeMultiplier < 2
@@ -191,7 +198,7 @@ class MapPanel extends React.Component {
 
   getFilteredPosts() {
     const searchedPosts = this.state.search
-      ? this.props.posts.filter((post) => 
+      ? this.props.posts.filter((post) =>
         post.category.name.toLowerCase().indexOf(this.state.search.toLowerCase()) > -1
           || post.emotion.name.toLowerCase().indexOf(this.state.search.toLowerCase()) > -1)
       : this.props.posts;
@@ -362,7 +369,7 @@ class MapPanel extends React.Component {
           >
             { this.getEmotionPin(Emotions.HAPPY, 32) }
           </div>
-          <div 
+          <div
             className={
               !this.state.quickEmotionSelected
                 ? 'map-panel__quick-emotions'

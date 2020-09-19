@@ -22,12 +22,14 @@ class App extends React.Component {
       history: [],
       isLoading: true,
       posts: [],
-      wallOptions: {}
+      wallOptions: {},
+      savedMapView: null,
     };
 
     this.go = this.go.bind(this);
     this.setIsLoading = this.setIsLoading.bind(this);
     this.setWallOptions = this.setWallOptions.bind(this);
+    this.setSavedMapView = this.setSavedMapView.bind(this);
     this.generatePosts = this.generatePosts.bind(this);
   }
 
@@ -80,6 +82,12 @@ class App extends React.Component {
     });
   }
 
+  setSavedMapView(savedMapView) {
+    this.setState({
+      savedMapView
+    });
+  }
+
   generatePosts(amount) {
     const posts = [];
     for (let i = 0; i < amount; i++) {
@@ -94,16 +102,18 @@ class App extends React.Component {
 
   render() {
     return (
-      <View 
+      <View
         activePanel={this.state.activePanel}
         popout={this.state.isLoading ? <ScreenSpinner /> : null}
       >
         <MapPanel
           id="map-panel"
           posts={this.state.posts}
+          savedMapView={this.state.savedMapView}
           go={this.go}
           setIsLoading={this.setIsLoading}
           setWallOptions={this.setWallOptions}
+          setSavedMapView={this.setSavedMapView}
         />
         <WallPanel
           id="wall-panel"
